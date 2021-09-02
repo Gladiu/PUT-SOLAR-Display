@@ -95,66 +95,7 @@ DISTFILES += \
     imports/QtQuick/Studio/Components/designer/images/item-triangle-24px.png \
     imports/QtQuick/Studio/Components/designer/images/item-triangle-24px@2x.png \
     imports/QtQuick/Studio/Components/qmldir \
-    imports/QtQuick/Studio/Effects/BlendItem.qml \
-    imports/QtQuick/Studio/Effects/BrightnessContrastItem.qml \
-    imports/QtQuick/Studio/Effects/ColorOverlayItem.qml \
-    imports/QtQuick/Studio/Effects/ColorizeItem.qml \
-    imports/QtQuick/Studio/Effects/DirectionalBlurItem.qml \
-    imports/QtQuick/Studio/Effects/DropShadowItem.qml \
-    imports/QtQuick/Studio/Effects/FastBlurItem.qml \
-    imports/QtQuick/Studio/Effects/GammaAdjustItem.qml \
-    imports/QtQuick/Studio/Effects/GaussianBlurItem.qml \
-    imports/QtQuick/Studio/Effects/GlowItem.qml \
-    imports/QtQuick/Studio/Effects/HueSaturationItem.qml \
-    imports/QtQuick/Studio/Effects/MaskItem.qml \
-    imports/QtQuick/Studio/Effects/MaskedBlurItem.qml \
-    imports/QtQuick/Studio/Effects/RadialBlurItem.qml \
-    imports/QtQuick/Studio/Effects/SaturationItem.qml \
-    imports/QtQuick/Studio/Effects/ZoomBlurItem.qml \
-    imports/QtQuick/Studio/Effects/designer/MyPlugin.metainfo \
-    imports/QtQuick/Studio/Effects/designer/images/blend-mode-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/blend-mode-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/blend-mode-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/brightness-contrast-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/brightness-contrast-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/brightness-contrast-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/colourize-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/colourize-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/colourize-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/directional-blur-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/directional-blur-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/directional-blur-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/drop-shadow-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/drop-shadow-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/drop-shadow-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/fast-blur-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/fast-blur-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/fast-blur-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/gamma-adjust-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/gamma-adjust-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/gamma-adjust-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/glow-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/glow-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/glow-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/hue-satuartion-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/hue-satuartion-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/hue-satuartion-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/mask-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/mask-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/mask-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/mask-blur-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/mask-blur-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/mask-blur-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/radial-blur-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/radial-blur-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/radial-blur-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/saturation-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/saturation-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/saturation-24px@2x.png \
-    imports/QtQuick/Studio/Effects/designer/images/zoom-blur-16px.png \
-    imports/QtQuick/Studio/Effects/designer/images/zoom-blur-24px.png \
-    imports/QtQuick/Studio/Effects/designer/images/zoom-blur-24px@2x.png \
-    imports/QtQuick/Studio/Effects/qmldir
+
 
 HEADERS += \
     serialport.h

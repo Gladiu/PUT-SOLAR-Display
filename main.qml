@@ -6,10 +6,19 @@ import QtQuick.Extras 1.4
 
 
 ApplicationWindow {
+    id: app
     width: 1920
     height: 1080
     visible: true
     title: qsTr("Dashboard gauges, PUT Solar Dynamics")
+    property bool mode: true
+    MouseArea{
+        anchors.fill: parent
+        onClicked:{
+            normalMode.toggle()
+            bmsMode.toggle()
+        }
+    }
 
     Image {
         id: background
@@ -17,17 +26,27 @@ ApplicationWindow {
         source: "file:///" + appPath + "/dashpngs/backgrounds_195_610.png"
         mipmap: true
         fillMode: Image.Stretch
-
-        Image {
-            id: psd_logo_white
-            x: 1696
-            y: 30
-            opacity: 0.5
-            source: "file:///" + appPath + "/dashpngs/psd_logo_white.png"
-            fillMode: Image.PreserveAspectFit
+    }
+    Rectangle{
+        id: normalMode
+        visible: true
+        function toggle()
+        {
+            visible = !visible
         }
-
-
+        Connections {
+            target: serialPort
+        }
+        Timer
+        {
+            interval: 200; running: true; repeat: true
+            onTriggered:{
+         //       serialPort.readData();
+                rightIndicator.on = serialPort.getRightIndicator();
+                leftIndicator.on = serialPort.getLeftIndicator();
+                circGaugeSpeedometer.value = serialPort.getVelocity();
+            }
+        }
         CircularGauge {
             id: circGaugeSpeedometer
             objectName: "speedometer"
@@ -36,19 +55,8 @@ ApplicationWindow {
             width: 516
             height: 516
             value: 100
-            enabled: true
             stepSize: 0
             maximumValue: 200
-            Connections {
-                target: serialPort
-            }
-            Timer
-            {
-                interval: 200; running: true; repeat: true
-                onTriggered: circGaugeSpeedometer.value = serialPort.getVelocity()
-            }
-
-
         }
 
         CircularGauge {
@@ -70,7 +78,7 @@ ApplicationWindow {
                     color: "white"
                     visible: styleData.value === 0 || styleData.value === 12
                     text: styleData.value === 0 ? "0" : (styleData.value === 12 ? "12" : "12")
-                    }
+                }
             }
 
             Text {
@@ -188,14 +196,6 @@ ApplicationWindow {
             Connections {
                 target: serialPort
             }
-            /*
-            Timer
-            {
-                interval: 200; running: true; repeat: true
-                onTriggered: leftIndicator.on = serialPort.getLeftIndicator()
-            }
-*/
-
         }
 
         TurnIndicator {
@@ -207,23 +207,29 @@ ApplicationWindow {
             on: true
             flashing: true
             direction: 2
-            Connections {
-                target: serialPort
-            }
-            Timer
+        }
+    }
+    Rectangle{
+        id: bmsMode
+        visible: false
+        function toggle()
+        {
+            visible = !visible
+        }
+        /*
+        Timer
+        {
+            interval: 200; running: true; repeat: true
+            onTriggered:
             {
-                interval: 200; running: true; repeat: true
-                onTriggered:{
-                    rightIndicator.on = serialPort.getRightIndicator()
-                    leftIndicator.on = serialPort.getLeftIndicator()
-                }
+
             }
         }
-
+        */
     }
-
-
 }
+
+
 
 
 
