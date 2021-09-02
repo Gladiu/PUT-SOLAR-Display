@@ -1,5 +1,4 @@
-#ifndef SERIALPORT_H
-#define SERIALPORT_H
+#pragma once
 
 #include <QDebug>
 #include <QObject>
@@ -40,4 +39,3 @@ private:
   bool rightIndicator;
 };
 
-#endif // SERIALPORT_H

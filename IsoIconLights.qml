@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Extras 1.4
 
 //import "file:///home/szymon/Documents/Workspace_Qt/psd_main_computer_ui/dashqmls"

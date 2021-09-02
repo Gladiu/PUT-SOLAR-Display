@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Extras 1.4
 
 
@@ -14,7 +14,7 @@ ApplicationWindow {
     Image {
         id: background
         anchors.fill: parent
-        source: "file:///home/upsquared/Documents/qt-ws/psd-main-computer/dashpngs/backgrounds_195_610.png"
+        source: "file:///" + appPath + "/dashpngs/backgrounds_195_610.png"
         mipmap: true
         fillMode: Image.Stretch
 
@@ -23,7 +23,7 @@ ApplicationWindow {
             x: 1696
             y: 30
             opacity: 0.5
-            source: "file:///home/upsquared/Documents/qt-ws/psd_main_computer/dashpngs/psd_logo_white.png"
+            source: "file:///" + appPath + "/dashpngs/psd_logo_white.png"
             fillMode: Image.PreserveAspectFit
         }
 
@@ -176,7 +176,6 @@ ApplicationWindow {
             x: 511
             y: 796
         }
-
         TurnIndicator{
             id: leftIndicator
             x: 474

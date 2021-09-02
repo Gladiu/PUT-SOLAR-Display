@@ -5,10 +5,10 @@
 #include <iostream>
 
 /* Private includes */
+#include "serialport.h"
 #include <QQmlContext>
 #include <QQmlComponent>
 //#include <canopen_object_dict.h>
-#include <serialport.h>
 
 int main(int argc, char *argv[]) {
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
   QQmlContext *context = engine.rootContext();
   context->setContextProperty("serialPort", &serialPort);
   const QUrl url(QStringLiteral("qrc:/main.qml"));
+      engine.rootContext()->setContextProperty("appPath", QGuiApplication::applicationDirPath());
   QObject::connect(
       &engine, &QQmlApplicationEngine::objectCreated, &app,
       [url](QObject *obj, const QUrl &objUrl) {
