@@ -73,7 +73,7 @@ void SerialPort::connectToSerialPort() {
         qDebug() << "Port could not be opened.";
     }
 }
-/*
+
 void SerialPort::readData()
 {
 
@@ -91,8 +91,8 @@ void SerialPort::readData()
         {"bms5", false}
     };
 
-
-    while(std::find(recievedMessage.begin(), recievedMessage.end(), false) != std::end(recievedMessage)){
+    auto isFalse = [](std::pair<std::string, bool> element){return element.second;};
+    while(std::find_if(recievedMessage.begin(), recievedMessage.end(), isFalse) != std::end(recievedMessage)){
         serialport_message = this->serialport_device->readLine();
         std::string message(serialport_message.toStdString());
         std::string id = message.substr(0, 3);
@@ -124,13 +124,13 @@ void SerialPort::readData()
             bmsVoltages[6] =
             bmsVoltages[7] =
             recievedMessage["bms1"] = true;
-
+        */
         }
 
 
     }
 }
-*/
+
 
 /*
     1 długie

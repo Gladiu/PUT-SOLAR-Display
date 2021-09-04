@@ -19,7 +19,7 @@ public:
   void connectToSerialPort();
 
 public slots:
-  //void readData();
+  void readData();
   double getVelocity(){return 69;}
   bool getRightIndicator(){return rightIndicator;}
   bool getLeftIndicator(){return leftIndicator;}

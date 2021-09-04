@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Extras 1.4
+import QtQuick.Window 2.12
 
 
 
@@ -41,7 +42,7 @@ ApplicationWindow {
         {
             interval: 200; running: true; repeat: true
             onTriggered:{
-         //       serialPort.readData();
+                //       serialPort.readData();
                 rightIndicator.on = serialPort.getRightIndicator();
                 leftIndicator.on = serialPort.getLeftIndicator();
                 circGaugeSpeedometer.value = serialPort.getVelocity();
@@ -216,7 +217,7 @@ ApplicationWindow {
         {
             visible = !visible
         }
-        /*
+
         Timer
         {
             interval: 200; running: true; repeat: true
@@ -225,7 +226,14 @@ ApplicationWindow {
 
             }
         }
-        */
+        Text {
+            anchors.fill:parent
+            color: "white"
+            id: myText
+            font.family: "Helvetica"
+            font.pointSize: 50
+            text:  qsTr("No BMS Voltages avalible!")
+        }
     }
 }
 
