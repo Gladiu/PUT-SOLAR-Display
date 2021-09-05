@@ -16,20 +16,19 @@ SerialPort::SerialPort(QObject *parent) : QObject(parent) {
     /* Creating constructor and freeing memory */
     this->serialport_device = new QSerialPort(this);
     velocity = 0;
+    battery = 0;
     leftIndicator = false;
     rightIndicator = false;
+    longLights = false;
+    shortLights = false;
+    currentWarning = false;
     bmsVoltages.assign(29,0);
-    bmsError = false;
     std::map<std::string, std::string> temp{
         {"inverter", "290" },
         {"lights", "581"},
-        {"bmsError", "085"},
-        // Could be a container but its way easier this way and i dont care enought
-        {"bms1", "185"},
-        {"bms2", "186"},
-        {"bms3", "187"},
-        {"bms4", "188"},
-        {"bms5", "189"}
+        {"bms", "085"},
+        {"battery", "18B"},
+        {"current", "056"}
   };
     canDict.insert(temp.begin(),temp.end());
 }
@@ -79,16 +78,11 @@ void SerialPort::readData()
 
     // Stop iterating when we cant find a false
     std::map<std::string, bool> recievedMessage{
-        {"inverter", false},
-        {"lLight", false},
-        {"rLight", false},
-        {"bmsError", false},
-        // Could be a container but its way easier this way and i dont care enought
-        {"bms1", false},
-        {"bms2", false},
-        {"bms3", false},
-        {"bms4", false},
-        {"bms5", false}
+        {"inverter", true},
+        {"lights", true},
+        {"bms", false},
+        {"current", false},
+        {"battery", false}
     };
 
     auto isFalse = [](std::pair<std::string, bool> element){return element.second;};
@@ -98,40 +92,34 @@ void SerialPort::readData()
         std::string id = message.substr(0, 3);
 
         if (id == canDict["inverter"]) {
-            velocity = strtoul( message.substr(12,2).c_str(), NULL, 16);
+            velocity = strtoul(message.substr(12,2).c_str(), NULL, 16);
             recievedMessage["inverter"] = true;
         }
-        if (id == canDict["lights"] && (message.substr(8,2) == "02" || message.substr(8,2) == "06")) {
-            rightIndicator = true;
-            recievedMessage["rLight"] = true;
+        if (id == canDict["lights"]) {
+            std::string lightType = message.substr(8,2);
+            longLights = lightType == "01";
+            rightIndicator = (lightType == "02" || lightType == "06");
+            leftIndicator = (lightType == "03" || lightType == "06");
+            shortLights = lightType == "05";
+            recievedMessage["lights"] = true;
         }
-        if (id == canDict["lights"] && (message.substr(8,2) == "03" || message.substr(8,2) == "06")) {
-            leftIndicator = true;
-            recievedMessage["lLight"] = true;
+        if (id == canDict["bms"]){
+            recievedMessage["bms"] = true;
+            bmsErrorIndex =  strtoul(message.substr(9,1).c_str(), NULL, 16);
+            }
+        if (id == canDict["current"]){
+            recievedMessage["current"] = true;
+            currentWarning =  static_cast<bool>(message.substr(9,1).c_str());
+
         }
-        if (id == canDict["bmsError"]){
-            bmsError = true;
-            recievedMessage["bmsError"] = true;
+        if (id == canDict["battery"]){
+            recievedMessage["battery"] = true;
+            battery =  strtoul(message.substr(10,2).c_str(), NULL, 16);
         }
-        if (id == canDict["bms1"]){
-            /*
-            bmsVoltages[0] =
-            bmsVoltages[1] =
-            bmsVoltages[2] =
-            bmsVoltages[3] =
-            bmsVoltages[4] =
-            bmsVoltages[5] =
-            bmsVoltages[6] =
-            bmsVoltages[7] =
-            recievedMessage["bms1"] = true;
-        */
         }
 
 
     }
-}
-
-
 /*
     1 długie
     2 prawy

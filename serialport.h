@@ -20,12 +20,16 @@ public:
 
 public slots:
   void readData();
-  double getVelocity(){return 69;}
+  double getVelocity(){return velocity;}
+  double getBattery(){return battery;}
   bool getRightIndicator(){return rightIndicator;}
   bool getLeftIndicator(){return leftIndicator;}
-  double getBMSVoltage(int index){return (index > 0 && index <=29 )? bmsVoltages[index] : 0; };
-  bool getBMSError(){return bmsError;};
-
+  bool getLongLights(){return longLights;}
+  bool getShortLights(){return shortLights;}
+  bool getAwarLights(){return true;}//leftIndicator && rightIndicator;}
+  QString getBMSError(){return QString::fromStdString(bmsErrors[bmsErrorIndex]);}
+  bool getCurrentWarning(){return currentWarning;}
+  	
 private:
   std::vector<double> bmsVoltages;
 
@@ -33,10 +37,26 @@ private:
   QSerialPort *serialport_device;
   QString serialport_message;
   double velocity;
+  double battery;
   bool leftIndicator;
   bool rightIndicator;
-  bool bmsError;
-
+  bool shortLights;
+  bool longLights;
+  int bmsErrorIndex;
+  std::vector<std::string> bmsErrors{
+      ""
+      "ERROR: High Voltage",
+      "ERROR: Low Voltage",
+      "ERROR: High Temperature",
+      "ERROR: Low Temperature",
+      "WARNING: High Voltage",
+      "WARNING: Low Voltage",
+      "WARNING: High Temperature",
+      "WARNING: Low Temperature"
+      "ERROR: Too High Volt. Diff.",
+      "WARNING: Too High Volt. Diff."
+  };
+  bool currentWarning;
   std::map<std::string, std::string> canDict;
 
 };

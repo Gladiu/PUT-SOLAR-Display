@@ -16,8 +16,8 @@ ApplicationWindow {
     MouseArea{
         anchors.fill: parent
         onClicked:{
-            normalMode.toggle()
-            bmsMode.toggle()
+//            normalMode.toggle()
+//            bmsMode.toggle()
         }
     }
 
@@ -42,24 +42,42 @@ ApplicationWindow {
         {
             interval: 200; running: true; repeat: true
             onTriggered:{
-                //       serialPort.readData();
+                //serialPort.readData();
                 rightIndicator.on = serialPort.getRightIndicator();
                 leftIndicator.on = serialPort.getLeftIndicator();
+                longLights.visible = serialPort.getLongLights();
+                shortLights.visible = serialPort.getShortLights();
+                awarLights.visible = serialPort.getAwarLights();
                 circGaugeSpeedometer.value = serialPort.getVelocity();
+                bmsError.text = serialPort.getBMSError();
+                currentWarning.visible = true;//serialPort.getCurrentWarning();
+                circGaugeBattery.value = serialPort.getBattery();
             }
         }
         CircularGauge {
             id: circGaugeSpeedometer
             objectName: "speedometer"
             x: 702
-            y: 194
+            y: 230
             width: 516
             height: 516
             value: 100
             stepSize: 0
-            maximumValue: 200
+            maximumValue: 100
         }
-
+        Text{
+            id: bmsError
+            color: "red"
+            text:  qsTr("TEST")
+            font.pixelSize: 100
+        }
+        Text{
+            id: currentWarning
+            color: "red"
+            text: qsTr("Overcurrent Warning!")
+            y: 100
+            font.pixelSize: 100
+        }
         CircularGauge {
             id: circGaugePower
             x: 1514
@@ -126,7 +144,7 @@ ApplicationWindow {
             y: 556
             width: 408
             height: 312
-            value: 15//qsTr(serialPort.battery)
+            value: 0
             maximumValue: 100
             stepSize: 1
             style: IconGaugeStyle {
@@ -179,12 +197,6 @@ ApplicationWindow {
                 horizontalAlignment: Text.AlignHCenter
             }
         }
-
-        IsoIconsBar {
-            id: iso_195_156
-            x: 511
-            y: 796
-        }
         TurnIndicator{
             id: leftIndicator
             x: 474
@@ -192,11 +204,8 @@ ApplicationWindow {
             width: 142
             height: 152
             flashing: true
-            on: true
+            on: false
             direction: 3
-            Connections {
-                target: serialPort
-            }
         }
 
         TurnIndicator {
@@ -205,11 +214,40 @@ ApplicationWindow {
             y: 360
             width: 142
             height: 152
-            on: true
+            on: false
             flashing: true
             direction: 2
         }
+        Rectangle{
+            x: 811
+            y: 796
+            Image {
+                id: shortLights
+                width: 100
+                height: 90
+                source: "file:///" + appPath + "/dashpngs/krotkie.png"
+                visible: false
+            }
+            Image {
+                id: longLights
+                x: 110
+                width: 100
+                height: 90
+                source: "file:///" + appPath + "/dashpngs/dlugie.png"
+                visible: false
+            }
+            Image {
+                id: awarLights
+                x: 220
+                width: 100
+                height: 90
+                source: "file:///" + appPath + "/dashpngs/awar.png"
+                visible: false
+            }
+
+        }
     }
+/*
     Rectangle{
         id: bmsMode
         visible: false
@@ -234,7 +272,7 @@ ApplicationWindow {
             font.pointSize: 50
             text:  qsTr("No BMS Voltages avalible!")
         }
-    }
+    } */
 }
 
 
