@@ -26,16 +26,15 @@ public slots:
   bool getLeftIndicator(){return leftIndicator;}
   bool getLongLights(){return longLights;}
   bool getShortLights(){return shortLights;}
-  bool getAwarLights(){return true;}//leftIndicator && rightIndicator;}
+  bool getAwarLights(){return leftIndicator && rightIndicator;}
   QString getBMSError(){return QString::fromStdString(bmsErrors[bmsErrorIndex]);}
   bool getCurrentWarning(){return currentWarning;}
   	
 private:
   std::vector<double> bmsVoltages;
-
-  QString ecm_com_port;
-  QSerialPort *serialport_device;
-  QString serialport_message;
+  QSerialPort serialportDevice;
+  QString serialportMessage;
+  QSerialPortInfo serialportInfo;
   double velocity;
   double battery;
   bool leftIndicator;

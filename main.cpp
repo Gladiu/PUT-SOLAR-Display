@@ -13,13 +13,12 @@
 int main(int argc, char *argv[]) {
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QGuiApplication app(argc, argv);
-
+  QQmlApplicationEngine engine;
 
   /* Connect C++ with QML engine */
   SerialPort serialPort;
   /* Start reading from COM port */
   serialPort.connectToSerialPort();
-  QQmlApplicationEngine engine;
 
   QQmlContext *context = engine.rootContext();
   context->setContextProperty("serialPort", &serialPort);

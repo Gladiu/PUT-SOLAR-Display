@@ -14,7 +14,6 @@
 
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
     /* Creating constructor and freeing memory */
-    this->serialport_device = new QSerialPort(this);
     velocity = 0;
     battery = 0;
     leftIndicator = false;
@@ -38,38 +37,27 @@ void SerialPort::connectToSerialPort() {
     qDebug() << "Looking for ECM COM port...";
     QList<QSerialPortInfo> serialport_device_list;
     serialport_device_list = QSerialPortInfo::availablePorts();
-
-    /* Looking for ECM COM Port*/
-    for (int i = 0; i < serialport_device_list.count(); i++) {
-        qDebug() << "Found device name: " +
-                    serialport_device_list.at(i).portName() +
-                    " and description: " +
-                    serialport_device_list.at(i).description();
-        if (serialport_device_list.at(i).description() == "PsdEcmComPort") {
-            ecm_com_port = serialport_device_list.at(i).portName();
-            qDebug() << "Found ECM COM Port under description:" +
-                        serialport_device_list.at(i).portName() + " " +
-                        serialport_device_list.at(i).description();
-            break;
-        } else {
-            qDebug() << "Could not find ECM COM Port. Checking other ports...";
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
+        qDebug() << "Name : " << info.portName();
+        qDebug() << "Description : " << info.description();
+        qDebug() << "Manufacturer: " << info.manufacturer();
+        if (info.description() == QString::fromStdString("PsdEcmComPort")){
+            serialportDevice.setPort(info);
+            serialportInfo = info;
         }
     }
 
     /* Establishing connection */
-    this->serialport_device->setPortName(ecm_com_port);
-    if (serialport_device->open(QSerialPort::ReadWrite)) {
-        qDebug() << "Port " + serialport_device->portName() + " opened.";
-        this->serialport_device->setBaudRate(QSerialPort::Baud115200);
-        this->serialport_device->setDataBits(QSerialPort::Data8);
-        this->serialport_device->setParity(QSerialPort::NoParity);
-        this->serialport_device->setStopBits(QSerialPort::OneStop);
-        this->serialport_device->setFlowControl(QSerialPort::NoFlowControl);
-        qDebug() << "Connection with " + serialport_device->portName() +
-                    " established.";
-
+    serialportDevice.setPortName(serialportInfo.portName());
+    if (serialportDevice.open(QSerialPort::ReadWrite)) {
+        qDebug() << "Port " + serialportDevice.portName() + " opened.";
+        serialportDevice.setBaudRate(QSerialPort::Baud115200);
+        serialportDevice.setDataBits(QSerialPort::Data8);
+        serialportDevice.setParity(QSerialPort::NoParity);
+        serialportDevice.setStopBits(QSerialPort::OneStop);
+        serialportDevice.setFlowControl(QSerialPort::NoFlowControl);
     } else {
-        qDebug() << "Port could not be opened.";
+        qDebug() << "Port could not be opened. Are you running program as sudo?";
     }
 }
 
@@ -87,8 +75,8 @@ void SerialPort::readData()
 
     auto isFalse = [](std::pair<std::string, bool> element){return element.second;};
     while(std::find_if(recievedMessage.begin(), recievedMessage.end(), isFalse) != std::end(recievedMessage)){
-        serialport_message = this->serialport_device->readLine();
-        std::string message(serialport_message.toStdString());
+        serialportMessage = serialportDevice.readLine();
+        std::string message(serialportMessage.toStdString());
         std::string id = message.substr(0, 3);
 
         if (id == canDict["inverter"]) {
