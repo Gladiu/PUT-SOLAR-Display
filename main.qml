@@ -42,7 +42,8 @@ ApplicationWindow {
         {
             interval: 200; running: true; repeat: true
             onTriggered:{
-                //serialPort.readData();
+                serialPort.readData();
+                /*
                 rightIndicator.on = serialPort.getRightIndicator();
                 leftIndicator.on = serialPort.getLeftIndicator();
                 longLights.visible = serialPort.getLongLights();
@@ -52,6 +53,7 @@ ApplicationWindow {
                 bmsError.text = serialPort.getBMSError();
                 currentWarning.visible = true;//serialPort.getCurrentWarning();
                 circGaugeBattery.value = serialPort.getBattery();
+                */
             }
         }
         CircularGauge {

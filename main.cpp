@@ -8,7 +8,6 @@
 #include "serialport.h"
 #include <QQmlContext>
 #include <QQmlComponent>
-//#include <canopen_object_dict.h>
 
 int main(int argc, char *argv[]) {
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

@@ -13,7 +13,8 @@
 #include <map>
 
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
-    /* Creating constructor and freeing memory */
+
+
     velocity = 0;
     battery = 0;
     leftIndicator = false;
@@ -21,7 +22,6 @@ SerialPort::SerialPort(QObject *parent) : QObject(parent) {
     longLights = false;
     shortLights = false;
     currentWarning = false;
-    bmsVoltages.assign(29,0);
     std::map<std::string, std::string> temp{
         {"inverter", "290" },
         {"lights", "581"},
@@ -49,7 +49,7 @@ void SerialPort::connectToSerialPort() {
 
     /* Establishing connection */
     serialportDevice.setPortName(serialportInfo.portName());
-    if (serialportDevice.open(QSerialPort::ReadWrite)) {
+    if (serialportDevice.open(QSerialPort::ReadOnly)) {
         qDebug() << "Port " + serialportDevice.portName() + " opened.";
         serialportDevice.setBaudRate(QSerialPort::Baud115200);
         serialportDevice.setDataBits(QSerialPort::Data8);
@@ -63,7 +63,6 @@ void SerialPort::connectToSerialPort() {
 
 void SerialPort::readData()
 {
-
     // Stop iterating when we cant find a false
     std::map<std::string, bool> recievedMessage{
         {"inverter", true},
@@ -73,12 +72,16 @@ void SerialPort::readData()
         {"battery", false}
     };
 
+
     auto isFalse = [](std::pair<std::string, bool> element){return element.second;};
     while(std::find_if(recievedMessage.begin(), recievedMessage.end(), isFalse) != std::end(recievedMessage)){
-        serialportMessage = serialportDevice.readLine();
-        std::string message(serialportMessage.toStdString());
+        std::string message;
+        auto data = serialportDevice.readLine();
+        for (int i = 0; i < data.size(); ++i)
+        {
+            message.push_back(data.at(i));
+        }
         std::string id = message.substr(0, 3);
-
         if (id == canDict["inverter"]) {
             velocity = strtoul(message.substr(12,2).c_str(), NULL, 16);
             recievedMessage["inverter"] = true;
@@ -105,7 +108,6 @@ void SerialPort::readData()
             battery =  strtoul(message.substr(10,2).c_str(), NULL, 16);
         }
         }
-
 
     }
 /*

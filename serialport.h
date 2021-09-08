@@ -31,9 +31,7 @@ public slots:
   bool getCurrentWarning(){return currentWarning;}
   	
 private:
-  std::vector<double> bmsVoltages;
   QSerialPort serialportDevice;
-  QString serialportMessage;
   QSerialPortInfo serialportInfo;
   double velocity;
   double battery;
