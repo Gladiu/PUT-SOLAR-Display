@@ -1,13 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>IsoParking.qml</file>
-        <file>IsoIconsBar.qml</file>
-        <file>IsoIconBlue.qml</file>
-        <file>IsoIconLights.qml</file>
         <file>DashboardGaugeStyle.qml</file>
         <file>IconGaugeStyle.qml</file>
-        <file>IsoItem.qml</file>
         <file>imports/QtQuick/Studio/Components/ArcItem.qml</file>
         <file>imports/QtQuick/Studio/Components/BorderItem.qml</file>
         <file>imports/QtQuick/Studio/Components/FlipableItem.qml</file>

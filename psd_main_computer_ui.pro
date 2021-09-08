@@ -30,7 +30,6 @@ DISTFILES += \
     ../../../Qt/Examples/Qt-5.15.1/quickcontrols/extras/dashboard/qml/DashboardGaugeStyle.qml \
     DashboardGaugeStyle.qml \
     IconGaugeStyle.qml \
-    IsoItem.qml \
     TurnIndicator.qml \
     dash_qmls/IconGaugeStyle.qml \
     dash_qmls/TachometerStyle.qml \
