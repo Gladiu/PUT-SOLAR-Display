@@ -14,7 +14,7 @@
 
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
 
-
+    power = 0;
     velocity = 0;
     battery = 0;
     leftIndicator = false;
@@ -69,7 +69,8 @@ void SerialPort::readData()
         {"lights", true},
         {"bms", false},
         {"current", false},
-        {"battery", false}
+        {"battery", false},
+        {"power", false}
     };
 
 
@@ -106,7 +107,9 @@ void SerialPort::readData()
         if (id == canDict["battery"]){
             recievedMessage["battery"] = true;
             battery =  strtoul(message.substr(10,2).c_str(), NULL, 16);
+            power = strtoul(message.substr(6,4).c_str(), NULL, 16);
         }
+
         }
 
     }

@@ -6,8 +6,6 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 
-#include <canopen_object_dict.h>
-
 #include <string>
 #include <vector>
 
@@ -22,6 +20,7 @@ public slots:
   void readData();
   double getVelocity(){return velocity;}
   double getBattery(){return battery;}
+  double getPower(){return power;}
   bool getRightIndicator(){return rightIndicator;}
   bool getLeftIndicator(){return leftIndicator;}
   bool getLongLights(){return longLights;}
@@ -35,6 +34,7 @@ private:
   QSerialPortInfo serialportInfo;
   double velocity;
   double battery;
+  double power;
   bool leftIndicator;
   bool rightIndicator;
   bool shortLights;

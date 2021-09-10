@@ -50,8 +50,9 @@ ApplicationWindow {
                 awarLights.visible = serialPort.getAwarLights();
                 circGaugeSpeedometer.value = serialPort.getVelocity();
                 bmsError.text = serialPort.getBMSError();
-                currentWarning.visible = true;//serialPort.getCurrentWarning();
+                currentWarning.visible = serialPort.getCurrentWarning();
                 circGaugeBattery.value = serialPort.getBattery();
+                circGaugePower.value = serialPort.getPower();
             }
         }
         CircularGauge {
@@ -84,7 +85,7 @@ ApplicationWindow {
             y: 370
             width: 335
             height: 728
-            value: 7
+            value: 0
             stepSize: 1
             maximumValue: 12
             style: IconGaugeStyle {
