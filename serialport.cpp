@@ -41,14 +41,14 @@ SerialPort::SerialPort(QObject *parent) : QObject(parent) {
         {"inverter", "290" },
         {"lights", "581"},
         {"battery", "18B"},
-        {"current", " 56"},
+        {"current", " 55"},
         {"voltage0", "185"},
         {"voltage1", "186"},
         {"voltage2", "187"},
         {"voltage3", "188"},
         {"bmsGeneral", "189"},
-        {"bmsWarning", " 86"},
-        {"bmsTemp","18A"}
+        {"bmsWarning", " 87"},
+        {"bmsTemp","18A"},
   };
     canDict.insert(tempMap.begin(),tempMap.end());
     bmsVoltages = std::vector<std::string>(4,"");
@@ -93,18 +93,20 @@ void SerialPort::readData()
 {
     // Stop iterating when we cant find a false
     std::map<std::string, bool> recievedMessage{
-        {"inverter", true},
-        {"lights", true},
-        {"current", true},
-        {"battery", true},
-        {"power", true},
-        {"voltage0", true},
-        {"voltage1", true},
-        {"voltage2", true},
-        {"voltage3", true},
-        {"bmsGeneral", true},
+        {"inverter", false},
+        {"lightLong", false},
+        {"lightLeft", false},
+        {"lightRight", false},
+        {"current", false},
+        {"battery", false},
+        {"power", false},
+        {"voltage0", false},
+        {"voltage1", false},
+        {"voltage2", false},
+        {"voltage3", false},
+        {"bmsGeneral", false},
         {"bmsWarning", false},
-        {"bmsTemp", true}
+        {"bmsTemp", false},
     };
 
     auto havntRead = [](std::pair<std::string, bool> element){return !element.second;};
@@ -174,7 +176,6 @@ int n = 0,
     message.assign(response, response + 1024);
     response[0] = 0;
     close(USB);
-
         //auto data = serialportDevice->readAll();
         std::string id = message.substr(0, 3);
 
@@ -183,12 +184,22 @@ int n = 0,
             recievedMessage["inverter"] = true;
         }
         if (id == canDict["lights"]) {
-            std::string lightType = message.substr(8,2);
-            longLights = lightType == "01";
-            rightIndicator = (lightType == "02" || lightType == "06");
-            leftIndicator = (lightType == "03" || lightType == "06");
-            shortLights = lightType == "05";
-            recievedMessage["lights"] = true;
+            std::string lightType = message.substr(6,2);
+            bool enabled = std::stoi(message.substr(9,1));
+            if (lightType == "01"){
+                longLights = enabled;
+                recievedMessage["lightLong"] = true;
+            }
+            if  (lightType == "02" || lightType == "06"){
+                rightIndicator = enabled;
+                recievedMessage["lightRight"] = true;
+            }
+            if (lightType == "03" || lightType == "06"){
+                    leftIndicator = enabled;
+                    recievedMessage["lightLeft"] = true;
+            }
+            //if  (lightType == "05")
+            //	shortLights = enabled;
         }
         if (id == canDict["current"]){
             recievedMessage["current"] = true;
@@ -196,6 +207,7 @@ int n = 0,
         }
         if (id == canDict["battery"]){
             recievedMessage["battery"] = true;
+            recievedMessage["power"] = true;
             battery =  strtoul(message.substr(10,2).c_str(), NULL, 16);
             power = strtoul(message.substr(6,4).c_str(), NULL, 16);
         }
@@ -223,7 +235,7 @@ int n = 0,
         if (id == canDict["bmsGeneral"]){
             recievedMessage["bmsGeneral"] = true;
 
-            bmsTemperatures[1] = "";
+            bmsTemperatures[0] = "";
             for (int j = 4; j < 8; j++)
             {
                 double temperature = strtoul(message.substr(6+(j*2),2).c_str(), NULL, 16);

@@ -38,18 +38,20 @@ ApplicationWindow {
             serialPort.readData();
             rightIndicator.on = serialPort.getRightIndicator();
             leftIndicator.on = serialPort.getLeftIndicator();
-            longLights.visible = true//serialPort.getLongLights();
-            shortLights.visible = true//serialPort.getShortLights();
-            awarLights.visible = true//serialPort.getAwarLights();
+            longLights.visible = serialPort.getLongLights();
+            shortLights.visible = true;//serialPort.getShortLights();
+            awarLights.visible = serialPort.getAwarLights();
             circGaugeSpeedometer.value = serialPort.getVelocity();
             circGaugeBattery.value = serialPort.getBattery();
             circGaugePower.value = serialPort.getPower();
+            bmsModeChargeLevel.text = serialPort.getBattery();
             voltage0.text = serialPort.getBMSVoltage(0);
             voltage1.text = serialPort.getBMSVoltage(1);
             voltage2.text = serialPort.getBMSVoltage(2);
             voltage3.text = serialPort.getBMSVoltage(3);
             voltage4.text = serialPort.getBMSVoltage(4);
-
+            temp0.text = serialPort.getBMSTemperature(0);
+            temp1.text = serialPort.getBMSTemperature(1);
 
             warningCurrent.text = serialPort.getWarningCurrent();
             warningTemp.text = serialPort.getWarningTemp();
@@ -92,6 +94,12 @@ ApplicationWindow {
             }
         }
 
+        Text {
+            id: error
+            font.pixelSize: 150
+            color: "red"
+            y: 800
+        }
         CircularGauge {
             id: circGaugePower
             x: 1514
@@ -276,8 +284,14 @@ ApplicationWindow {
             ModuleVoltage { id: voltage3  }
             ModuleVoltage { id: voltage4  }
             Column {
+                ModuleTemperature {id: temp0}
                 ModuleTemperature {id: temp1}
-                ModuleTemperature {id: temp2}
+            }
+            Text{
+                id: bmsModeChargeLevel
+                font.pointSize: 180
+                color: "red"
+
             }
         }
     }
