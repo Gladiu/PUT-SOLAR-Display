@@ -17,19 +17,29 @@ SerialPort::SerialPort(QObject *parent) : QObject(parent) {
     power = 0;
     velocity = 0;
     battery = 0;
+    bmsErrorIndex = 0;
     leftIndicator = false;
     rightIndicator = false;
     longLights = false;
     shortLights = false;
     currentWarning = false;
-    std::map<std::string, std::string> temp{
+    bmsMode	= false;
+    std::map<std::string, std::string> tempMap{
         {"inverter", "290" },
         {"lights", "581"},
-        {"bms", "085"},
+        {"bmsError", "085"},
         {"battery", "18B"},
-        {"current", "056"}
+        {"current", "056"},
+        {"voltage0", "185"},
+        {"voltage1", "186"},
+        {"voltage2", "187"},
+        {"voltage3", "188"},
+        {"bmsGeneral", "189"},
+        {"bmsTemp","18A"}
   };
-    canDict.insert(temp.begin(),temp.end());
+    canDict.insert(tempMap.begin(),tempMap.end());
+    std::vector<std::string> tempVec(4,"");
+    bmsVoltages = tempVec;
 }
 
 void SerialPort::connectToSerialPort() {
@@ -67,17 +77,28 @@ void SerialPort::readData()
     std::map<std::string, bool> recievedMessage{
         {"inverter", true},
         {"lights", true},
-        {"bms", false},
-        {"current", false},
-        {"battery", false},
-        {"power", false}
+        {"bmsError", true},
+        {"current", true},
+        {"battery", true},
+        {"power", true},
+        {"voltage0", false},
+        {"voltage1", false},
+        {"voltage2", false},
+        {"voltage3", false},
+        {"bmsGeneral", true},
+        {"bmsTemp", true}
     };
 
 
-    auto isFalse = [](std::pair<std::string, bool> element){return element.second;};
-    while(std::find_if(recievedMessage.begin(), recievedMessage.end(), isFalse) != std::end(recievedMessage)){
-        std::string message;
+    auto havntRead = [](std::pair<std::string, bool> element){return !element.second;};
+    while(std::find_if(recievedMessage.begin(), recievedMessage.end(), havntRead) != std::end(recievedMessage)){
+
         auto data = serialportDevice.readLine();
+        std::string message = data.toStdString();
+        // I dont know why and how but without this loop it doesnt work
+        for(int i = 0; i < 50000; i++){
+            serialportDevice.canReadLine();
+        }
         for (int i = 0; i < data.size(); ++i)
         {
             message.push_back(data.at(i));
@@ -95,8 +116,8 @@ void SerialPort::readData()
             shortLights = lightType == "05";
             recievedMessage["lights"] = true;
         }
-        if (id == canDict["bms"]){
-            recievedMessage["bms"] = true;
+        if (id == canDict["bmsError"]){
+            recievedMessage["bmsError"] = true;
             bmsErrorIndex =  strtoul(message.substr(9,1).c_str(), NULL, 16);
             }
         if (id == canDict["current"]){
@@ -108,6 +129,27 @@ void SerialPort::readData()
             recievedMessage["battery"] = true;
             battery =  strtoul(message.substr(10,2).c_str(), NULL, 16);
             power = strtoul(message.substr(6,4).c_str(), NULL, 16);
+        }
+
+        // Bms voltages
+        for (int i = 0; i < 4; i++)
+        {
+            std::string key = "voltage";
+            key.append(std::to_string(i));
+            if (id == canDict[key]){
+                recievedMessage[key] = true;
+                bmsVoltages[i] = "";
+                for (int j = 0; j < 8; j++)
+                {
+                    double voltage = strtoul(message.substr(6+(j*2),2).c_str(), NULL, 16);
+                    voltage = voltage/100.0+1.85;
+                    if (j != 0)
+                        bmsVoltages[i].append(std::string(" "));
+                    // It should work without this if but it doesnt
+                    if (i < 4)
+                        bmsVoltages[i].append(std::to_string(voltage).substr(0,4));
+                }
+            }
         }
 
         }
@@ -122,3 +164,17 @@ void SerialPort::readData()
     6 awaryjne
     9 postojowe
 */
+
+double SerialPort::getVelocity(){return velocity;}
+double SerialPort::getBattery(){return battery;}
+double SerialPort::getPower(){return power;}
+bool SerialPort::getRightIndicator(){return rightIndicator;}
+bool SerialPort::getLeftIndicator(){return leftIndicator;}
+bool SerialPort::getLongLights(){return longLights;}
+bool SerialPort::getShortLights(){return shortLights;}
+bool SerialPort::getAwarLights(){return leftIndicator && rightIndicator;}
+QString SerialPort::getBMSError(){return QString::fromStdString(bmsErrors[bmsErrorIndex]);}
+bool SerialPort::getCurrentWarning(){return currentWarning;}
+QString SerialPort::getBMSVoltage(int index){return QString::fromStdString(bmsVoltages[index]);}
+bool SerialPort::getBMSMode(){return bmsMode;}
+QString SerialPort::getBMSTemperature(){return QString::fromStdString(bmsTemperatures);};

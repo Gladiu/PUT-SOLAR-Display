@@ -16,8 +16,8 @@ ApplicationWindow {
     MouseArea{
         anchors.fill: parent
         onClicked:{
-//            normalMode.toggle()
-//            bmsMode.toggle()
+            normalMode.toggle()
+            bmsMode.toggle()
         }
     }
 
@@ -28,32 +28,37 @@ ApplicationWindow {
         mipmap: true
         fillMode: Image.Stretch
     }
+    Connections {
+        target: serialPort
+    }
+    Timer
+    {
+        interval: 200; running: true; repeat: true
+        onTriggered:{
+            serialPort.readData();
+            rightIndicator.on = serialPort.getRightIndicator();
+            leftIndicator.on = serialPort.getLeftIndicator();
+            longLights.visible = serialPort.getLongLights();
+            shortLights.visible = serialPort.getShortLights();
+            awarLights.visible = serialPort.getAwarLights();
+            circGaugeSpeedometer.value = serialPort.getVelocity();
+            bmsError.text = serialPort.getBMSError();
+            currentWarning.visible = serialPort.getCurrentWarning();
+            circGaugeBattery.value = serialPort.getBattery();
+            circGaugePower.value = serialPort.getPower();
+            voltage0.text = serialPort.getBMSVoltage(0)
+            voltage1.text = serialPort.getBMSVoltage(1)
+            voltage2.text = serialPort.getBMSVoltage(2)
+            voltage3.text = serialPort.getBMSVoltage(3)
+            voltage4.text = serialPort.getBMSVoltage(4)
+        }
+    }
     Rectangle{
         id: normalMode
         visible: true
         function toggle()
         {
             visible = !visible
-        }
-        Connections {
-            target: serialPort
-        }
-        Timer
-        {
-            interval: 200; running: true; repeat: true
-            onTriggered:{
-                //serialPort.readData();
-                rightIndicator.on = serialPort.getRightIndicator();
-                leftIndicator.on = serialPort.getLeftIndicator();
-                longLights.visible = serialPort.getLongLights();
-                shortLights.visible = serialPort.getShortLights();
-                awarLights.visible = serialPort.getAwarLights();
-                circGaugeSpeedometer.value = serialPort.getVelocity();
-                bmsError.text = serialPort.getBMSError();
-                currentWarning.visible = serialPort.getCurrentWarning();
-                circGaugeBattery.value = serialPort.getBattery();
-                circGaugePower.value = serialPort.getPower();
-            }
         }
         CircularGauge {
             id: circGaugeSpeedometer
@@ -248,7 +253,7 @@ ApplicationWindow {
 
         }
     }
-/*
+
     Rectangle{
         id: bmsMode
         visible: false
@@ -256,22 +261,16 @@ ApplicationWindow {
         {
             visible = !visible
         }
-        Timer
-        {
-            interval: 200; running: true; repeat: true
-            onTriggered:
-            {
-            }
+        Column{
+            ModuleVoltage { id: voltage0  }
+            ModuleVoltage { id: voltage1  }
+            ModuleVoltage { id: voltage2  }
+            ModuleVoltage { id: voltage3  }
+            ModuleVoltage { id: voltage4  }
+
+
         }
-        Text {
-            anchors.fill:parent
-            color: "white"
-            id: myText
-            font.family: "Helvetica"
-            font.pointSize: 50
-            text:  qsTr("No BMS Voltages avalible!")
-        }
-    } */
+    }
 }
 
 

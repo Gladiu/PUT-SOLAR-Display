@@ -12,5 +12,6 @@
         <file>imports/QtQuick/Studio/Components/SvgPathItem.qml</file>
         <file>imports/QtQuick/Studio/Components/TriangleItem.qml</file>
         <file>TurnIndicator.qml</file>
+        <file>ModuleVoltage.qml</file>
     </qresource>
 </RCC>

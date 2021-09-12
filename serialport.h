@@ -18,17 +18,21 @@ public:
 
 public slots:
   void readData();
-  double getVelocity(){return velocity;}
-  double getBattery(){return battery;}
-  double getPower(){return power;}
-  bool getRightIndicator(){return rightIndicator;}
-  bool getLeftIndicator(){return leftIndicator;}
-  bool getLongLights(){return longLights;}
-  bool getShortLights(){return shortLights;}
-  bool getAwarLights(){return leftIndicator && rightIndicator;}
-  QString getBMSError(){return QString::fromStdString(bmsErrors[bmsErrorIndex]);}
-  bool getCurrentWarning(){return currentWarning;}
-  	
+  double getVelocity();
+  double getBattery();
+  double getPower();
+  bool getRightIndicator();
+  bool getLeftIndicator();
+  bool getLongLights();
+  bool getShortLights();
+  bool getAwarLights();
+  QString getBMSError();
+  bool getCurrentWarning();
+  QString getBMSVoltage(int index);
+  bool getBMSMode();
+  QString getBMSTemperature();
+
+
 private:
   QSerialPort serialportDevice;
   QSerialPortInfo serialportInfo;
@@ -54,6 +58,8 @@ private:
       "WARNING: Too High Volt. Diff."
   };
   bool currentWarning;
+  bool bmsMode;
   std::map<std::string, std::string> canDict;
-
+  std::vector<std::string> bmsVoltages;
+  std::string bmsTemperatures;
 };
