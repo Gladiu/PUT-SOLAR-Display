@@ -174,7 +174,6 @@ int n = 0,
     message.assign(response, response + 1024);
     response[0] = 0;
     close(USB);
-
         //auto data = serialportDevice->readAll();
         std::string id = message.substr(0, 3);
 

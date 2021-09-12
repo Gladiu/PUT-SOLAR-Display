@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   /* Connect C++ with QML engine */
   SerialPort serialPort;
   /* Start reading from COM port */
-  serialPort.connectToSerialPort();
+  //serialPort.connectToSerialPort();
 
   QQmlContext *context = engine.rootContext();
   context->setContextProperty("serialPort", &serialPort);

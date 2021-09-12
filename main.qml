@@ -38,19 +38,23 @@ ApplicationWindow {
             serialPort.readData();
             rightIndicator.on = serialPort.getRightIndicator();
             leftIndicator.on = serialPort.getLeftIndicator();
-            longLights.visible = serialPort.getLongLights();
-            shortLights.visible = serialPort.getShortLights();
-            awarLights.visible = serialPort.getAwarLights();
+            longLights.visible = true//serialPort.getLongLights();
+            shortLights.visible = true//serialPort.getShortLights();
+            awarLights.visible = true//serialPort.getAwarLights();
             circGaugeSpeedometer.value = serialPort.getVelocity();
-            bmsError.text = serialPort.getBMSError();
-            currentWarning.visible = serialPort.getCurrentWarning();
             circGaugeBattery.value = serialPort.getBattery();
             circGaugePower.value = serialPort.getPower();
-            voltage0.text = serialPort.getBMSVoltage(0)
-            voltage1.text = serialPort.getBMSVoltage(1)
-            voltage2.text = serialPort.getBMSVoltage(2)
-            voltage3.text = serialPort.getBMSVoltage(3)
-            voltage4.text = serialPort.getBMSVoltage(4)
+            voltage0.text = serialPort.getBMSVoltage(0);
+            voltage1.text = serialPort.getBMSVoltage(1);
+            voltage2.text = serialPort.getBMSVoltage(2);
+            voltage3.text = serialPort.getBMSVoltage(3);
+            voltage4.text = serialPort.getBMSVoltage(4);
+
+
+            warningCurrent.text = serialPort.getWarningCurrent();
+            warningTemp.text = serialPort.getWarningTemp();
+            warningVolt.text = serialPort.getWarningVolt();
+            warningVoltDiff.text = serialPort.getWarningVoltDiff();
         }
     }
     Rectangle{
@@ -67,23 +71,27 @@ ApplicationWindow {
             y: 230
             width: 516
             height: 516
-            value: 100
+            value: 0
             stepSize: 0
             maximumValue: 100
         }
-        Text{
-            id: bmsError
-            color: "red"
-            text:  qsTr("TEST")
-            font.pixelSize: 100
+
+
+        Column{
+            WarningMessage{
+                id: warningCurrent
+            }
+            WarningMessage{
+                id: warningTemp
+            }
+            WarningMessage{
+                id: warningVolt
+            }
+            WarningMessage{
+                id: warningVoltDiff
+            }
         }
-        Text{
-            id: currentWarning
-            color: "red"
-            text: qsTr("Overcurrent Warning!")
-            y: 100
-            font.pixelSize: 100
-        }
+
         CircularGauge {
             id: circGaugePower
             x: 1514
@@ -267,8 +275,10 @@ ApplicationWindow {
             ModuleVoltage { id: voltage2  }
             ModuleVoltage { id: voltage3  }
             ModuleVoltage { id: voltage4  }
-
-
+            Column {
+                ModuleTemperature {id: temp1}
+                ModuleTemperature {id: temp2}
+            }
         }
     }
 }
