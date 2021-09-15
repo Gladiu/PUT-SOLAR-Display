@@ -37,6 +37,7 @@ SerialPort::SerialPort(QObject *parent) : QObject(parent) {
     longLights = false;
     shortLights = false;
     bmsMode	= false;
+    charging = false;
     std::map<std::string, std::string> tempMap{
         {"inverter", "290" },
         {"lights", "581"},
@@ -49,6 +50,7 @@ SerialPort::SerialPort(QObject *parent) : QObject(parent) {
         {"bmsGeneral", "189"},
         {"bmsWarning", " 87"},
         {"bmsTemp","18A"},
+        {"charging", " 1C"}
   };
     canDict.insert(tempMap.begin(),tempMap.end());
     bmsVoltages = std::vector<std::string>(4,"");
@@ -92,22 +94,41 @@ void SerialPort::connectToSerialPort() {
 void SerialPort::readData()
 {
     // Stop iterating when we cant find a false
-    std::map<std::string, bool> recievedMessage{
-        {"inverter", false},
-        {"lightLong", false},
-        {"lightLeft", false},
-        {"lightRight", false},
-        {"current", false},
-        {"battery", false},
-        {"power", false},
-        {"voltage0", false},
-        {"voltage1", false},
-        {"voltage2", false},
-        {"voltage3", false},
-        {"bmsGeneral", false},
-        {"bmsWarning", false},
-        {"bmsTemp", false},
-    };
+    std::map<std::string, bool> recievedMessage;
+    if (charging){
+        std::map<std::string, bool> temp{
+            {"current", false},
+            {"battery", false},
+            {"power", false},
+            {"voltage0", false},
+            {"voltage1", false},
+            {"voltage2", false},
+            {"voltage3", false},
+            {"bmsGeneral", false},
+            {"bmsWarning", false},
+            {"bmsTemp", false},
+            };
+        recievedMessage.insert(temp.begin(), temp.end());
+    }
+    else{
+        std::map<std::string, bool> temp{
+            {"inverter", false},
+            {"lightLong", false},
+            {"lightLeft", false},
+            {"lightRight", false},
+            {"current", false},
+            {"battery", false},
+            {"power", false},
+            {"voltage0", false},
+            {"voltage1", false},
+            {"voltage2", false},
+            {"voltage3", false},
+            {"bmsGeneral", false},
+            {"bmsWarning", false},
+            {"bmsTemp", false},
+            };
+        recievedMessage.insert(temp.begin(), temp.end());
+    }
 
     auto havntRead = [](std::pair<std::string, bool> element){return !element.second;};
     while(std::find_if(recievedMessage.begin(), recievedMessage.end(), havntRead) != std::end(recievedMessage)){
@@ -178,7 +199,9 @@ int n = 0,
     close(USB);
         //auto data = serialportDevice->readAll();
         std::string id = message.substr(0, 3);
-
+        if (id == canDict["charging"]){
+            charging = std::stoi(message.substr(7,1));
+        }
         if (id == canDict["inverter"]) {
             velocity = strtoul(message.substr(12,2).c_str(), NULL, 16);
             recievedMessage["inverter"] = true;
@@ -239,7 +262,7 @@ int n = 0,
             for (int j = 4; j < 8; j++)
             {
                 double temperature = strtoul(message.substr(6+(j*2),2).c_str(), NULL, 16);
-                temperature = temperature/100.0+1.85;
+                temperature = temperature + 30;
                 if (j != 4)
                     bmsTemperatures[0].append(std::string(" "));
                 // It should work without this if but it doesnt
@@ -253,7 +276,7 @@ int n = 0,
             for (int j = 0; j < 8; j++)
             {
                 double temperature = strtoul(message.substr(6+(j*2),2).c_str(), NULL, 16);
-                temperature = temperature/100.0+1.85;
+                temperature = temperature + 30;
                 if (j != 0)
                     bmsTemperatures[1].append(std::string(" "));
                 // It should work without this if but it doesnt
@@ -309,3 +332,5 @@ QString SerialPort::getWarningCurrent(){return QString::fromStdString(warningCur
 QString SerialPort::getWarningTemp(){return QString::fromStdString(warningTemp);};
 QString SerialPort::getWarningVolt(){return QString::fromStdString(warningVolt);};
 QString SerialPort::getWarningVoltDiff(){return QString::fromStdString(warningVoltDiff);};
+
+bool SerialPort::getCharging(){return charging;}

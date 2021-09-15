@@ -35,6 +35,7 @@ public slots:
   QString getWarningVolt();
   QString getWarningVoltDiff();
 
+  bool getCharging();
 private:
   QSerialPort *serialportDevice;
   QSerialPortInfo serialportInfo;
@@ -57,4 +58,6 @@ private:
   std::map<std::string, std::string> canDict;
   std::vector<std::string> bmsVoltages;
   std::vector<std::string> bmsTemperatures;
+
+  bool charging;
 };

@@ -57,8 +57,11 @@ ApplicationWindow {
             warningTemp.text = serialPort.getWarningTemp();
             warningVolt.text = serialPort.getWarningVolt();
             warningVoltDiff.text = serialPort.getWarningVoltDiff();
+            bmsMode.visible = serialPort.getCharging();
+            normalMode.visible = !serialPort.getCharging();
+            }
+
         }
-    }
     Rectangle{
         id: normalMode
         visible: true
