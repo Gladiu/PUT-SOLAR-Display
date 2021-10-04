@@ -12,6 +12,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <cstdlib> // Random  numbers used only to generate nice looking numbers
 
 // C library headers
 #include <stdio.h>
@@ -316,9 +317,18 @@ int n = 0,
     9 postojowe
 */
 
-double SerialPort::getVelocity(){return velocity;}
-double SerialPort::getBattery(){return battery;}
-double SerialPort::getPower(){return power;}
+double SerialPort::getVelocity(){
+    srand(time(NULL));
+    return 30.0 - rand()%20/20.0;
+}
+double SerialPort::getBattery(){
+    srand(time(NULL));
+    return 60.0 - rand()%20/20.0;
+}
+double SerialPort::getPower(){
+    srand(time(NULL));
+    return 10.0 - rand()%20/20.0;
+}
 bool SerialPort::getRightIndicator(){return rightIndicator;}
 bool SerialPort::getLeftIndicator(){return leftIndicator;}
 bool SerialPort::getLongLights(){return longLights;}
@@ -326,7 +336,18 @@ bool SerialPort::getShortLights(){return shortLights;}
 bool SerialPort::getAwarLights(){return leftIndicator && rightIndicator;}
 QString SerialPort::getBMSVoltage(int index){return QString::fromStdString(bmsVoltages[index]);}
 bool SerialPort::getBMSMode(){return bmsMode;}
-QString SerialPort::getBMSTemperature(int index){return QString::fromStdString(bmsTemperatures[index]);};
+QString SerialPort::getBMSTemperature(int index){
+    std::string value;
+    srand(time(NULL));
+    for (int i = 0; i < 8; i++){
+        // Generating string that is a value of 40 with randomly adding some values
+        // substr is cutting out unneccasary zeros
+
+        value.append(std::to_string(40.0f - (rand()%10)/10.0).substr(0, 4));
+        value.append(" ");
+    }
+    return QString::fromStdString(value);
+};
 
 QString SerialPort::getWarningCurrent(){return QString::fromStdString(warningCurrent);};
 QString SerialPort::getWarningTemp(){return QString::fromStdString(warningTemp);};
