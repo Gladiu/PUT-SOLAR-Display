@@ -65,7 +65,7 @@ Item {
         interval: 500
         running: on
         repeat: true
-        onTriggered: flashing = !flashing
+
     }
 //! [1]
 //! [2]
@@ -100,8 +100,7 @@ Item {
     Canvas {
         id: foregroundCanvas
         anchors.fill: parent
-        visible: on && flashing
-
+        visible: on
         onPaint: {
             var ctx = getContext("2d");
             ctx.reset();
