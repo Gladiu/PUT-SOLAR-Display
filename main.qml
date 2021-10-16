@@ -33,7 +33,7 @@ ApplicationWindow {
     }
     Timer
     {
-        interval: 200; running: true; repeat: true
+        interval: 5; running: true; repeat: true
         onTriggered:{
             serialPort.readData();
             rightIndicator.on = serialPort.getRightIndicator();
@@ -226,8 +226,7 @@ ApplicationWindow {
             y: 360
             width: 142
             height: 152
-            flashing: true
-            on: false
+            flashing: false
             direction: 3
         }
 
@@ -237,8 +236,7 @@ ApplicationWindow {
             y: 360
             width: 142
             height: 152
-            on: false
-            flashing: true
+            flashing: false
             direction: 2
         }
         Rectangle{
