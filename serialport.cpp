@@ -12,6 +12,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <cstdlib> // Random  numbers used only to generate nice looking numbers
 
 // C library headers
 #include <stdio.h>

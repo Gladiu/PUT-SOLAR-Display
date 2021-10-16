@@ -39,7 +39,7 @@ ApplicationWindow {
             rightIndicator.on = serialPort.getRightIndicator();
             leftIndicator.on = serialPort.getLeftIndicator();
             longLights.visible = serialPort.getLongLights();
-            shortLights.visible = true;//serialPort.getShortLights();
+            shortLights.visible = serialPort.getShortLights();
             awarLights.visible = serialPort.getAwarLights();
             circGaugeSpeedometer.value = serialPort.getVelocity();
             circGaugeBattery.value = serialPort.getBattery();
